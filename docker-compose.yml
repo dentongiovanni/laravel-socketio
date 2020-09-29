@@ -1,0 +1,64 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ./build/
+      dockerfile: app.dockerfile
+    image: laravel-socket
+    container_name: laravel-socket-app
+    restart: unless-stopped
+    working_dir: /usr/share/nginx/laravelsocket
+    volumes:
+      - ./server:/usr/share/nginx/laravelsocket
+    ports:
+      - 6001:6001  
+    networks:
+      - laravel-socket
+
+  db:
+    image: mysql:5.7
+    container_name: laravel-socket-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - 3306:3306  
+    networks:
+      - laravel-socket
+
+  nginx:
+    build:
+        context: ./build/
+        dockerfile: web.dockerfile
+    container_name: laravel-socket-nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./server:/usr/share/nginx/laravelsocket
+    networks:
+      - laravel-socket
+
+  redis:
+    image: redis
+    container_name: laravel-redis
+    networks:
+      - laravel-socket
+    ports:
+      - 6379:6379  
+    restart: unless-stopped
+
+networks:
+  laravel-socket:
+    driver: bridge
+  
+volumes:
+  dbdata:
+     

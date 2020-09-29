@@ -1,0 +1,15 @@
+1.) composer require predis/predis
+
+	QUEUE_CONNECTION=redis
+	REDIS_CLIENT=predis
+
+2.) npm install --save socket.io-client laravel-echo
+
+
+3.) npm install -g laravel-echo-server
+
+
+4.) laravel-echo-server init
+
+
+5.) laravel-echo-server start
